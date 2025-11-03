@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Layout, Menu, Avatar, Dropdown, Badge, Space, Typography } from 'antd';
 import {
   DashboardOutlined,
@@ -14,6 +13,8 @@ import {
   ProfileOutlined,
 } from '@ant-design/icons';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { useAppSelector } from 'app/config/store';
+import { AUTHORITIES } from 'app/config/constants';
 
 const { Header, Sider, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -22,6 +23,9 @@ const DashboardLayout = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const account = useAppSelector(state => state.authentication.account);
+  const authorities = account?.authorities || [];
+  const hasStaffAuthority = authorities.includes(AUTHORITIES.STAFF);
 
   const menuItems = [
     {
@@ -44,6 +48,15 @@ const DashboardLayout = () => {
       icon: <SettingOutlined />,
       label: 'Setting',
     },
+    ...(hasStaffAuthority
+      ? [
+          {
+            key: '/staff/book-import',
+            icon: <BookOutlined />,
+            label: 'Book Import (Staff)',
+          },
+        ]
+      : []),
   ];
 
   const userMenuItems = [
