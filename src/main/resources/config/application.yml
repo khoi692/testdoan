@@ -1,0 +1,88 @@
+spring:
+  messages:
+    basename: i18n/messages
+
+    encoding: UTF-8
+  thymeleaf:
+    cache: true
+  docker:
+    compose:
+      enabled: false # Disable Spring Boot Docker Compose auto-management
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${OAUTH2_GOOGLE_CLIENT_ID}
+            client-secret: ${OAUTH2_GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+          github:
+            client-id: ${OAUTH2_GITHUB_CLIENT_ID}
+            client-secret: ${OAUTH2_GITHUB_CLIENT_SECRET}
+            scope:
+              - user:email
+              - read:user
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+        max-page-size: 100
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+
+server:
+  port: 8080
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,application/javascript,application/json
+    min-response-size: 1024
+
+jhipster:
+  clientApp:
+    name: 'langleagueApp'
+  security:
+    authentication:
+      jwt:
+        base64-secret: ${JWT_SECRET_KEY:ZGVmYXVsdC1zZWNyZXQta2V5LXRoYXQtc2hvdWxkLWJlLWNoYW5nZWQtaW4tcHJvZHVjdGlvbg==}
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000
+    content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:"
+  cors:
+    allowed-origins: 'http://localhost:9000,http://localhost:3000'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'Authorization,Link,X-Total-Count,X-${spring.application.name}-alert,X-${spring.application.name}-params'
+    allow-credentials: true
+    max-age: 1800
+  api-docs:
+    default-include-pattern: /api/.*
+    management-include-pattern: /management/.*
+    title: Langleague API
+    description: Langleague API documentation
+    version: 0.0.1
+    terms-of-service-url:
+    contact-name:
+    contact-url:
+    contact-email:
+    license: unlicensed
+    license-url:
+
+# ===================================================================
+# Application specific properties
+# ===================================================================
+application:
+  oauth2:
+    # Frontend URL for OAuth2 redirect after authentication
+    # In production (monolith), frontend and backend are on the same origin
+    frontend-url: ${FRONTEND_URL:http://localhost:8080}

@@ -1,0 +1,156 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file.
+#
+# More information on profiles: https://www.jhipster.tech/profiles/
+# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+logging:
+  level:
+    ROOT: DEBUG
+    tech.jhipster: DEBUG
+    org.hibernate.SQL: DEBUG
+    com.langleague: DEBUG
+
+spring:
+  application:
+    name: langleague
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  docker:
+    compose:
+      enabled: false # Disable auto Docker Compose - we manage it manually
+  devtools:
+    restart:
+      enabled: true
+      additional-exclude: static/**
+    livereload:
+      enabled: false # we use Webpack dev server + BrowserSync for livereload
+  jackson:
+    serialization:
+      indent-output: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://localhost:3306/langleague?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: 123456
+    hikari:
+      poolName: Hikari
+      auto-commit: false
+      connection-test-query: SELECT 1
+      connection-timeout: 30000 # 30s - thời gian chờ lấy connection từ pool
+      validation-timeout: 5000 # 5s - thời gian chờ validate connection
+      idle-timeout: 600000 # 10 phút - connection không dùng sẽ bị đóng
+      max-lifetime: 1800000 # 30 phút - thời gian tối đa 1 connection tồn tại (phải < wait_timeout của MySQL)
+      minimum-idle: 5
+      maximum-pool-size: 10
+      leak-detection-threshold: 60000 # 60s - phát hiện connection leak
+      keepalive-time: 300000 # 5 phút - gửi keepalive để giữ connection sống
+  liquibase:
+    # Remove 'faker' if you do not want the sample data to be loaded automatically
+    contexts: dev
+  mail:
+    host: localhost
+    port: 1025 # MailDev/MailHog port
+    username: tuanmac2k2@gmail.com
+    password: gisy yehd pjxp arnh
+    protocol: smtp
+    test-connection: false
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+        debug: true # Enable debug in dev
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+      base-path: /management
+  endpoint:
+    health:
+      show-details: always
+  health:
+    mail:
+      enabled: false
+  messages:
+    cache-duration: PT1S # 1 second, see the ISO 8601 standard
+  thymeleaf:
+    cache: false
+
+server:
+  port: 8080
+  # make sure requests the proxy uri instead of the server one
+  forward-headers-strategy: native
+
+# ===================================================================
+# JHipster specific properties
+#
+# Full reference is available at: https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+jhipster:
+  clientApp:
+    name: 'langleagueApp'
+  cache: # Cache configuration
+    ehcache: # Ehcache configuration
+      time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
+      max-entries: 100 # Number of objects in each cache entry
+  # CORS is only enabled by default with the "dev" profile
+  cors:
+    # Allow Ionic for JHipster by default (* no longer allowed in Spring Boot 2.4+)
+    allowed-origins: 'http://localhost:9000,http://localhost:3000,http://localhost:8100'
+
+    # Enable CORS when running in GitHub Codespaces
+    allowed-origin-patterns: 'https://*.githubpreview.dev'
+    allowed-methods: '*'
+    allowed-headers: '*'
+    exposed-headers: 'Authorization,Link,X-Total-Count,X-${jhipster.clientApp.name}-alert,X-${jhipster.clientApp.name}-error,X-${jhipster.clientApp.name}-params'
+    allow-credentials: true
+    max-age: 1800
+  security:
+    authentication:
+      jwt:
+        base64-secret: OThjNmU3ZWYxNWM5N2U2MTlhMTg5ODkyMjEyNjUxNTJkNTlhMTc1NjdhOTBiYmZkZGM2Y2IwZTIxYTljYTRiZjg4YzRmYTA0ZGE4M2E5ZDY0NDE1ZTQ1MDViZjBlOGU4ZTAxNTc5YTExZGM2ZDE1ZGQ1NDY5MjBkNGMyN2RkNzM=
+        # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
+        #base64-secret: OThjNmU3ZWYxNWM5N2U2MTlhMTg5ODkyMjEyNjUxNTJkNTlhMTc1NjdhOTBiYmZkZGM2Y2IwZTIxYTljYTRiZjg4YzRmYTA0ZGE4M2E5ZDY0NDE1ZTQ1MDViZjBlOGU4ZTAxNTc5YTExZGM2ZDE1ZGQ1NDY5MjBkNGMyN2RkNzM=
+        # Token is valid 24 hours
+        token-validity-in-seconds: 86400
+        token-validity-in-seconds-for-remember-me: 2592000
+  mail: # specific JHipster mail property, for standard properties see MailProperties
+    base-url: http://127.0.0.1:8080
+  logging:
+    use-json-format: false # By default, logs are not in Json format
+    logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
+      enabled: false
+      host: localhost
+      port: 5000
+      ring-buffer-size: 512
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://www.jhipster.tech/common-application-properties/
+# ===================================================================
+
+application:
+  oauth2:
+    # Frontend URL for OAuth2 redirect after successful authentication
+    frontend-url: http://localhost:9000
