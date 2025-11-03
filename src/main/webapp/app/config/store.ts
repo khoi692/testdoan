@@ -8,6 +8,7 @@ import studySession from '../shared/reducers/study-session.reducer';
 import lesson from '../shared/reducers/lesson.reducer';
 import chapter from '../shared/reducers/chapter.reducer';
 import book from '../shared/reducers/book.reducer';
+import bookImport from '../modules/staff/book-import.slice';
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     lesson,
     chapter,
     book,
+    bookImport,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
